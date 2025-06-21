@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+startupx-backend/venv/
+
+# Node / Next.js
+node_modules/
+.next/
+startupx-ui/node_modules/
+startupx-ui/.next/
+
+# System
+.DS_Store
+.env
