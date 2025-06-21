@@ -5,37 +5,62 @@ import axios from "axios";
 
 export default function Home() {
   const [idea, setIdea] = useState("");
-  const [result, setResult] = useState("");
+  const [response, setResponse] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
-    if (!idea.trim()) return;
-    const res = await axios.post("http://localhost:8000/analyze", { idea });
-    setResult(res.data.message);
+    if (!idea) return;
+    setLoading(true);
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/evaluate_idea", {
+        idea,
+      });
+      setResponse(res.data.response || "No response received.");
+    } catch (err) {
+      setResponse("Error contacting backend.");
+      console.error(err);
+    }
+    setLoading(false);
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-start p-10">
-      <h1 className="text-4xl font-bold mb-4 text-blue-600">StartupX</h1>
+    <main style={{ padding: "2rem", fontFamily: "Arial" }}>
+      <h1>StartupX: Idea Evaluator</h1>
+
       <textarea
-        className="w-full max-w-xl border border-gray-300 rounded-md p-3 mb-4 bg-white text-black"
-        rows={5}
+        rows={4}
+        style={{ width: "100%", padding: "1rem", fontSize: "1rem" }}
         placeholder="Describe your startup idea..."
         value={idea}
         onChange={(e) => setIdea(e.target.value)}
       />
+
       <button
+        style={{
+          marginTop: "1rem",
+          padding: "0.75rem 1.5rem",
+          fontSize: "1rem",
+          background: "#0070f3",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
         onClick={handleSubmit}
-        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md"
+        disabled={loading}
       >
-        Analyze
+        {loading ? "Evaluating..." : "Evaluate Idea"}
       </button>
 
-      {result && (
-        <div className="mt-6 max-w-xl bg-gray-100 p-4 rounded-md shadow-sm w-full text-left">
-          <h2 className="font-semibold mb-2 text-lg">AI Analysis:</h2>
-          <p className="text-gray-700">{result}</p>
-        </div>
-      )}
+      <div style={{ marginTop: "2rem", whiteSpace: "pre-wrap" }}>
+        {response && (
+          <>
+            <h3>📊 Evaluation Result:</h3>
+            <p>{response}</p>
+          </>
+        )}
+      </div>
     </main>
   );
 }
+
