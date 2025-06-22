@@ -14,6 +14,11 @@ export default function Home() {
   const [personas, setPersonas] = useState([]);
   const [pitch, setPitch] = useState("");
   const [swot, setSwot] = useState<any>(null);
+  const [marketScope, setMarketScope] = useState(null);
+  const [showScope, setShowScope] = useState(false);
+  const [ideaEvaluated, setIdeaEvaluated] = useState(false);
+
+  const [deck, setDeck] = useState([]);
 
 
   const handleSubmit = async () => {
@@ -25,6 +30,7 @@ export default function Home() {
     setLoading(true);
     setError(null);
     setCompetitors([]); // reset previous results
+    setIdeaEvaluated(false);
   
     try {
       const res = await axios.post("http://127.0.0.1:8000/evaluate_idea", { idea });
@@ -32,6 +38,8 @@ export default function Home() {
       setReadinessScore(res.data.readiness || null);
       setPitch(res.data.pitch || "");
       setSwot(res.data.swot || null);
+      setMarketScope(res.data.market_scope || null);
+      setIdeaEvaluated(true);
       
       if (res.data.personas && res.data.personas.length > 0) {
         setPersonas(res.data.personas);
@@ -49,6 +57,16 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const handleGenerateDeck = async () => {
+    try {
+      const res = await axios.post("http://127.0.0.1:8000/generate_pitch_deck", { idea });
+      setDeck(res.data.deck || []);
+    } catch (err) {
+      console.error("Deck generation failed", err);
+    }
+  };
+  
 
   const Spinner = () => (
     <div className="mt-4 text-white text-center animate-pulse">
@@ -89,6 +107,14 @@ export default function Home() {
           {loading ? "Evaluating..." : "Evaluate Idea"}
         </button>
       </div>
+      {ideaEvaluated && (
+        <button
+          onClick={handleGenerateDeck}
+          className="mt-6 bg-purple-600 px-4 py-2 rounded text-white"
+        >
+          🎞️ Generate Pitch Deck
+        </button>
+      )}
       {error && (
         <p className="text-red-500 mt-4 text-center">{error}</p>
       )}
@@ -175,8 +201,51 @@ export default function Home() {
         </div>
       )}
 
-    <div className="w-full max-w-2xl mt-12">
-      <h2 className="text-2xl font-bold mb-4 text-center">🧠 Competitors</h2></div>
+      {deck.length > 0 && (
+        <div className="mt-10 w-full max-w-3xl">
+          <h2 className="text-2xl font-bold mb-4 text-center">📊 Startup Pitch Deck</h2>
+          {deck.map((slide, idx) => (
+            <div key={idx} className="bg-gray-900 p-4 my-2 rounded shadow">
+              <h3 className="text-xl font-semibold mb-2">{slide.title}</h3>
+              <ul className="list-disc list-inside text-gray-300">
+                {slide.bullets.map((b: string, i: number) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {marketScope && (
+        <div className="mt-10 w-full max-w-3xl text-center">
+          <button
+            onClick={() => setShowScope(!showScope)}
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded shadow transition"
+          >
+            {showScope ? "Hide Market Scope" : "Show Market Scope"}
+          </button>
+
+          {showScope && (
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-gray-800 p-4 rounded shadow border border-gray-700">
+                <h3 className="text-lg font-semibold text-purple-300 mb-2">📊 TAM</h3>
+                <p className="text-gray-300 text-sm">{marketScope.tam}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded shadow border border-gray-700">
+                <h3 className="text-lg font-semibold text-purple-300 mb-2">📍 SAM</h3>
+                <p className="text-gray-300 text-sm">{marketScope.sam}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded shadow border border-gray-700">
+                <h3 className="text-lg font-semibold text-purple-300 mb-2">🎯 SOM</h3>
+                <p className="text-gray-300 text-sm">{marketScope.som}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {competitors.length > 0 && (
+        <h2 className="text-2xl font-bold mb-4 text-center gap-4 mt-10">🧠 Competitors</h2>
+      )}
       <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
         {competitors.map((comp: any, idx: number) => (
           <div
@@ -224,4 +293,6 @@ export default function Home() {
     </main>
   );
 }
+
+
 
