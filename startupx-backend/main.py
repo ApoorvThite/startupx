@@ -6,7 +6,9 @@ from typing import List
 import random
 from agents.tag_generator import TagGeneratorAgent
 from agents.readiness import MarketReadinessAgent
-from agents.persona import PersonaGeneratorAgent  # 👈 Import the new agent
+from agents.persona import PersonaGeneratorAgent
+from agents.pitch import PitchGeneratorAgent
+from agents.swot import SWOTAgent  # 👈 Import the new agent
 
 app = FastAPI()
 
@@ -55,16 +57,30 @@ async def evaluate_idea(data: IdeaRequest):
         readiness_score = 5
 
     try:
+        pitch = PitchGeneratorAgent.run(idea)
+    except Exception as e:
+        print(f"Pitch agent failed: {e}")
+        pitch = ""
+    
+    try:
+        swot = SWOTAgent.run(idea)
+    except Exception as e:
+        print(f"SWOT agent failed: {e}")
+        swot = {}
+
+    try:
         personas = PersonaGeneratorAgent.run(idea)  # 👈 Add this block
     except Exception as e:
         print(f"Persona agent failed: {e}")
         personas = []
 
     result = {
-        "competitors": competitors,
-        "tags": tags,
-        "readiness": readiness_score,
-        "personas": personas  # 👈 Include in response
-    }
+    "competitors": competitors,
+    "tags": tags,
+    "readiness": readiness_score,
+    "personas": personas,
+    "pitch": pitch,
+    "swot": swot  # ⬅️ Add this line
+}
     cache[idea] = result
     return result

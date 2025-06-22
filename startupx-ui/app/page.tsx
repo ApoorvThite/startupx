@@ -12,6 +12,9 @@ export default function Home() {
   const [tags, setTags] = useState<string[]>([]);
   const [readinessScore, setReadinessScore] = useState<number | null>(null);
   const [personas, setPersonas] = useState([]);
+  const [pitch, setPitch] = useState("");
+  const [swot, setSwot] = useState<any>(null);
+
 
   const handleSubmit = async () => {
     if (!idea.trim()) {
@@ -27,6 +30,8 @@ export default function Home() {
       const res = await axios.post("http://127.0.0.1:8000/evaluate_idea", { idea });
       setTags(res.data.tags || []);
       setReadinessScore(res.data.readiness || null);
+      setPitch(res.data.pitch || "");
+      setSwot(res.data.swot || null);
       
       if (res.data.personas && res.data.personas.length > 0) {
         setPersonas(res.data.personas);
@@ -111,6 +116,12 @@ export default function Home() {
         </div>
       )}
 
+      {pitch && (
+        <div className="mt-8 max-w-2xl text-center border border-blue-700 p-4 rounded bg-gray-900">
+          <h2 className="text-xl font-semibold mb-2">📢 Your Elevator Pitch</h2>
+          <p className="text-blue-300 italic">{pitch}</p>
+        </div>
+      )}
 
       {tags.length > 0 && (
     <div className="flex flex-wrap gap-2 mt-6 justify-center">
@@ -124,8 +135,49 @@ export default function Home() {
       ))}
     </div>
   )}
+      {swot && (
+        <div className="mt-10 w-full max-w-4xl">
+          <h2 className="text-2xl font-bold mb-4 text-center">🧠 SWOT Analysis</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-green-900 p-4 rounded shadow">
+              <h3 className="text-lg font-semibold mb-2 text-green-200">Strengths</h3>
+              <ul className="list-disc list-inside text-green-100">
+                {swot.strengths.map((item: string, idx: number) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-red-900 p-4 rounded shadow">
+              <h3 className="text-lg font-semibold mb-2 text-red-200">Weaknesses</h3>
+              <ul className="list-disc list-inside text-red-100">
+                {swot.weaknesses.map((item: string, idx: number) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-blue-900 p-4 rounded shadow">
+              <h3 className="text-lg font-semibold mb-2 text-blue-200">Opportunities</h3>
+              <ul className="list-disc list-inside text-blue-100">
+                {swot.opportunities.map((item: string, idx: number) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+            <div className="bg-yellow-800 p-4 rounded shadow">
+              <h3 className="text-lg font-semibold mb-2 text-yellow-200">Threats</h3>
+              <ul className="list-disc list-inside text-yellow-100">
+                {swot.threats.map((item: string, idx: number) => (
+                  <li key={idx}>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
 
-      <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="w-full max-w-2xl mt-12">
+      <h2 className="text-2xl font-bold mb-4 text-center">🧠 Competitors</h2></div>
+      <div className="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-4 mt-12">
         {competitors.map((comp: any, idx: number) => (
           <div
           key={idx}
