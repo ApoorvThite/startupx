@@ -67,7 +67,6 @@ export default function Home() {
     }
   };
   
-
   const Spinner = () => (
     <div className="mt-4 text-white text-center animate-pulse">
       Evaluating your idea...

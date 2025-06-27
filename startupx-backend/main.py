@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from agents.competitor import CompetitorScoutAgent  # 👈 Import your agent
 from pydantic import BaseModel
 from typing import List
+from fastapi.responses import FileResponse
 import random
 from agents.tag_generator import TagGeneratorAgent
 from agents.readiness import MarketReadinessAgent
