@@ -101,3 +101,11 @@ With **StartupX**, users can:
 git clone https://github.com/ApoorvThite/startupx.git
 cd startupx
 
+cd startupx-backend
+pip install -r requirements.txt
+cp .env.example .env  # Add your OpenAI API key
+uvicorn main:app --reload
+
+cd startupx-ui
+npm install
+npm run dev
