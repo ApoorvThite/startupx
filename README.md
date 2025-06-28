@@ -109,3 +109,19 @@ uvicorn main:app --reload
 cd startupx-ui
 npm install
 npm run dev
+```
+
+📁 Folder Structure
+```
+startupx/
+├── startupx-backend/
+│   ├── main.py
+│   ├── agents/
+│   ├── utils/
+│   └── requirements.txt
+├── startupx-ui/
+│   ├── app/
+│   │   └── page.tsx
+│   ├── public/
+│   └── tailwind.config.js
+```
