@@ -13,14 +13,17 @@
 - [🧠 How It Works](#-how-it-works)
 - [🛠️ Getting Started](#-getting-started)
 - [📁 Folder Structure](#-folder-structure)
-- [🌱 Future Plans](#-future-plans)
-- [📄 License](#-license)
 
 ---
 
 ## 🎥 Demo
 
-Coming soon: [Live demo link or demo video GIF]
+[Live demo link or demo video GIF]
+
+
+https://github.com/user-attachments/assets/dd443743-8cca-475f-bc1c-63c1efc466a0
+
+
 
 ---
 
