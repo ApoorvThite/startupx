@@ -18,11 +18,7 @@
 
 ## 🎥 Demo
 
-[Live demo link or demo video GIF]
-
-
 https://github.com/user-attachments/assets/dd443743-8cca-475f-bc1c-63c1efc466a0
-
 
 
 ---
